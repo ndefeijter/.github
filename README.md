@@ -14,7 +14,7 @@ The labels must exist in each repository; a template can't create them.
 
 ## Pull requests
 
-Repositories squash-merge with the pull request title and description as the commit. The pull request template is therefore short and written as a commit message.
+Repositories squash-merge with the pull request title and description as the commit. The description is therefore short and written as a commit message: what changes and why. The template only holds the `Closes #` line and no hints, because GitHub copies comments into the commit too.
 
 ## Rules
 
