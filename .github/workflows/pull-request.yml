@@ -1,0 +1,16 @@
+name: Pull request
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  rules:
+    name: rules
+    uses: ./.github/workflows/pull-request-rules.yml
+    with:
+      # Here the script comes from the pull request itself, so a change to it is tested.
+      ref: ${{ github.event.pull_request.head.sha }}

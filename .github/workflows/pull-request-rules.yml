@@ -1,0 +1,37 @@
+# Reusable check: does a pull request follow the rules for its description and branch name?
+# Call it from a workflow that runs on `pull_request`; see README.md.
+name: Pull request rules
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Version of this repository to take the script from.
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pull-request-rules-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ndefeijter/.github
+          ref: ${{ inputs.ref }}
+          sparse-checkout: scripts
+          persist-credentials: false
+      # The pull request is input from outside: pass it through the environment,
+      # never inside the command.
+      - name: Check the pull request
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_AUTHOR_IS_BOT: ${{ github.event.pull_request.user.type == 'Bot' }}
+        run: python3 scripts/pull_request_rules.py
