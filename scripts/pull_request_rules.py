@@ -26,19 +26,20 @@ ATTRIBUTION = re.compile(
 def check(body, branch, author_is_bot):
     """Return a list of (rule, how to fix it) for every broken rule."""
     errors = []
-    if "<!--" in body:
-        errors.append((
-            "No template leftovers",
-            "The description contains `<!--`. Remove the hints from the template: "
-            "the description becomes the commit message on main.",
-        ))
     if ATTRIBUTION.search(body):
         errors.append((
             "No agent attribution",
             "The description has a `Co-Authored-By:` or `Generated with …` line. Remove it: "
             "the commits already show who made them.",
         ))
+    # A bot doesn't use the templates, and its descriptions may contain HTML comments.
     if not author_is_bot:
+        if "<!--" in body:
+            errors.append((
+                "No template leftovers",
+                "The description contains `<!--`. Remove the hints from the template: "
+                "the description becomes the commit message on main.",
+            ))
         if not CLOSES.search(body):
             errors.append((
                 "Traceable",

@@ -29,7 +29,7 @@ A check that every repository can run on its pull requests. It fails when:
 | Branch name | comes from a branch that is not named `<kind>/<issue number>-<short-title>`, with `feat`, `fix`, `docs` or `chore` as the kind |
 | No agent attribution | has a `Co-Authored-By:` or `Generated with …` line in its description |
 
-A pull request opened by a bot, such as a dependency update, skips "Traceable" and "Branch name".
+A pull request opened by a bot, such as a dependency update, skips "No template leftovers", "Traceable" and "Branch name": it doesn't use the templates. "No agent attribution" applies to everyone.
 
 To run it in a repository, add `.github/workflows/pull-request.yml`:
 
